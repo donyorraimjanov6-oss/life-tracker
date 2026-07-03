@@ -1,0 +1,42 @@
+name: Flutter Build APK
+
+# Сборка запустится автоматически, как только вы отправите код на GitHub
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Робот копирует ваш код к себе в облако
+    - uses: actions/checkout@v3
+
+    # 2. Робот устанавливает Java (нужна для сборки Android)
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+
+    # 3. Робот устанавливает чистый Flutter в обход любых блокировок
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+
+    # 4. Робот скачивает библиотеки из вашего pubspec.yaml
+    - name: Install dependencies
+      run: flutter pub get
+
+    # 5. Робот собирает готовый APK-файл (разбитый по процессорам, как мы хотели)
+    - name: Build APK
+      run: flutter build apk --split-per-abi
+
+    # 6. Робот выкладывает готовые файлы на страницу скачивания
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-apk
+        path: build/app/outputs/flutter-apk/*-release.apk
