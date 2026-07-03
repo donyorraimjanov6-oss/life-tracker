@@ -1,41 +1,21 @@
-name: Flutter Build APK
+name: flutter_app
+description: A new Flutter project.
+publish_to: 'none' # Remove this line if you want to publish to pub.dev
 
-on:
-  push:
-    branches: [ main, master ]
+version: 1.0.0+1
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+environment:
+  sdk: ">=3.0.0 <4.0.0"  # update SDK constraint based on your Flutter version
 
-    steps:
-    # 1. Копирование кода (Обновлено до v4)
-    - uses: actions/checkout@v4
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
 
-    # 2. Установка Java 17 (Обновлено до v4)
-    - name: Set up JDK
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'zulu'
-        java-version: '17'
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
 
-    # 3. Установка Flutter
-    - name: Set up Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        channel: 'stable'
-
-    # 4. Скачивание библиотек
-    - name: Install dependencies
-      run: flutter pub get
-
-    # 5. Сборка APK
-    - name: Build APK
-      run: flutter build apk --split-per-abi
-
-    # 6. Загрузка готовых файлов в артефакты (Обновлено до v4)
-    - name: Upload APK Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: release-apk
-        path: build/app/outputs/flutter-apk/*-release.apk
+flutter:
+  uses-material-design: true
